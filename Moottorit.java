@@ -1,3 +1,7 @@
+/**
+ * 
+ * @author Helvetin Perkeleet
+ */
 package Robotti_Tanel_i;
 
 import java.io.File;
@@ -14,14 +18,27 @@ public class Moottorit implements Behavior {
 	static RegulatedMotor rightMotor = Motor.A;
 	static RegulatedMotor puristin = Motor.B;
 	static RegulatedMotor nostin = Motor.C;
+	
+	/**
+	 * T‰ss‰ m‰‰ritettiin moottorin portit
+	 */
 
 	private boolean _suppressed = false;
 
 	public boolean takeControl() {
+		/**
+		 * Palauttaa Boolean arvon jos t‰m‰
+		 * Behavior pit‰isi tulla aktiiviseksi
+		 */
 		if (Button.readButtons() != 0) {
 			_suppressed = true;
 			leftMotor.stop();
 			rightMotor.stop();
+			/**
+			 * Kun jokin nappi on pohjassa robotti tekee sen behaviorin
+			 * Muuten se sammuttaa moottorit
+			 */
+			 
 		}
 		return true;
 	}
@@ -30,16 +47,26 @@ public class Moottorit implements Behavior {
 	
 	public void suppress() {
 		_suppressed = true;
+		/**
+		 * Lopettaa action() metodissa pyˆriv‰n koodin.
+		 */
 	}
 
 	public void action() {
 		_suppressed = false;
+		
+		/**
+		 * Pist‰‰ action() metodin p‰‰lle.
+		 */
 
 		
 		while (!_suppressed) {
 			leftMotor.synchronizeWith(new RegulatedMotor[] { rightMotor });
 
 			leftMotor.startSynchronization();
+			/**
+			 * Robotti synkkaa moottorit jotka liikuttavat robottia.
+			 */
 
 
 			switch (Main.sensor.control) {
@@ -53,6 +80,13 @@ public class Moottorit implements Behavior {
 					System.exit(0);
 				}
 				
+				/**
+				 * Case 0 = mit‰‰n n‰pp‰int‰ ei paineta
+				 * Moottorit sammuvat
+				 * Ja Escape n‰pp‰int‰ painamalla ohjelma sammuu
+				 * 
+				 */
+				
 				break;
 
 			case 1:
@@ -64,6 +98,12 @@ public class Moottorit implements Behavior {
 				rightMotor.backward();
 
 				break;
+				
+				/**
+				 * case 1 = TOP-LEFT
+				 * Robotti liikkuu eteenp‰in
+				 * 
+				 */
 
 			case 2:
 				leftMotor.setAcceleration(12000);
@@ -74,18 +114,36 @@ public class Moottorit implements Behavior {
 				rightMotor.forward();
 
 				break;
+				
+				/**
+				 * case 2 = BOTTOM-LEFT
+				 * Robotti liikkuu taaksep‰in
+				 *
+				 * 
+				 */
 
 			case 3:
 				leftMotor.setAcceleration(12000);
 				leftMotor.setSpeed((int) leftMotor.getMaxSpeed());
 				leftMotor.forward();
 				break;
+				
+				/**
+				 * case 3 = TOP-RIGHT
+				 * Robotti k‰‰ntyy oikealle
+				 * 
+				 */
 
 			case 4:
 				rightMotor.setAcceleration(12000);
 				rightMotor.setSpeed((int) rightMotor.getMaxSpeed());
 				rightMotor.forward();
 				break;
+				
+				/**
+				 * case 4 = BOTTOM-RIGHT
+				 * Robotti k‰‰ntyy vasemmalle
+				 */
 
 			case 5:
 				puristin.setAcceleration(2000);
@@ -95,6 +153,13 @@ public class Moottorit implements Behavior {
 				puristin.rotate(55);
 				nostin.rotate(-50);
 				break;
+				
+				
+				/**
+				 * case 5 = TOP-LEFT + TOP-RIGHT
+				 * Robotti sulkee puristimen ja nostaa samlla k‰tens‰ ilmaan
+				 * 
+				 */
 				
 			case 8:
 				puristin.setAcceleration(2000);
@@ -106,9 +171,22 @@ public class Moottorit implements Behavior {
 
 				break;
 				
+				
+				/**
+				 * case 8 =  BOTTOM-LEFT + BOTTOM-RIGHT
+				 * Robotti laskee k‰tens‰ ja avaa k‰tens‰
+				 * 
+				 */
+				
 			case 9:
 				File music = new File("musiikki2.wav");
 				Sound.playSample(music, 100);
+				
+				/**
+				 * case 9 = CENTRE/BEACON
+				 * Robotti soittaa musiikkia
+				 * 
+				 */
 				
 			case 10:
 				leftMotor.setAcceleration(12000);
@@ -119,6 +197,14 @@ public class Moottorit implements Behavior {
 				rightMotor.forward();
 
 				break;
+				
+				/**
+				 * case 10 = BOTTOM-LEFT + TOP-LEFT
+				 * Robotti k‰‰nt‰‰ molempia renkaita eri suuntiin
+				 * T‰m‰n seurauksena se k‰‰ntyy nopeammin haluttuun suuntaan
+				 * T‰ss‰ se k‰‰ntyy oikealle.
+				 * 
+				 */
 
 			case 11:
 				leftMotor.setAcceleration(12000);
@@ -128,6 +214,12 @@ public class Moottorit implements Behavior {
 				leftMotor.forward();
 				rightMotor.backward();
 				break;
+				
+				/** 
+				 * case 11 = TOP-RIGHT + BOTTOM-RIGHT
+				 * same kuin case 10 paitsi ett‰ robotti k‰‰ntyy vasemmalle.
+				 * 
+				 */
 
 			}
 			Thread.yield();
